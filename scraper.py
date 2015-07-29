@@ -1,24 +1,21 @@
-# This is a template for a Python scraper on morph.io (https://morph.io)
-# including some code snippets below that you should find helpful
+import mechanize
+import re
 
-# import scraperwiki
-# import lxml.html
-#
-# # Read in a page
-# html = scraperwiki.scrape("http://foo.com")
-#
-# # Find something on the page using css selectors
-# root = lxml.html.fromstring(html)
-# root.cssselect("div[align='left']")
-#
-# # Write out to the sqlite database using scraperwiki library
-# scraperwiki.sqlite.save(unique_keys=['name'], data={"name": "susan", "occupation": "software developer"})
-#
-# # An arbitrary query against the database
-# scraperwiki.sql.select("* from data where 'name'='peter'")
+br = mechanize.Browser()
+br.addheaders = [('User-agent', 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1')]
+response = br.open("http://data.fingal.ie/ViewDataSets/")
 
-# You don't have to do things with the ScraperWiki and lxml libraries.
-# You can use whatever libraries you want: https://morph.io/documentation/python
-# All that matters is that your final data is written to an SQLite database
-# called "data.sqlite" in the current working directory which has at least a table
-# called "data".
+for i in range(10):
+    html = response.read()
+    print "Page %d :" % i, html
+
+    br.select_form(nr=0)
+    print br.form
+    br.set_all_readonly(False)
+    mnext = re.search("""<a id="lnkNext" href="javascript:__doPostBack('(.*?)','(.*?)')">Next >>""", html)
+    if not mnext:
+        break
+    br["__EVENTTARGET"] = mnext.group(1)
+    br["__EVENTARGUMENT"] = mnext.group(2)
+    br.find_control("btnSearch").disabled = True
+    response = br.submit()
