@@ -3,7 +3,7 @@ import re
 
 br = mechanize.Browser()
 br.addheaders = [('User-agent', 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1')]
-response = br.open("http://data.fingal.ie/ViewDataSets/")
+response = br.open("https://www.aussiebulls.com/SignalList.aspx?lang=en&MarketSymbol=AUSTRALIAN")
 
 for i in range(10):
     html = response.read()
