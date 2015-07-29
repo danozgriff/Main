@@ -1,3 +1,4 @@
+import scraperwiki
 import mechanize
 import re
 
